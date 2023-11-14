@@ -21,6 +21,8 @@ dbConn.subscribe({
   complete: () => console.log('Connection already complete'),
 });
 
+dbConn.getPostgresVars();
+
 @Module({
   imports: [
     ConfigModule.forRoot({
