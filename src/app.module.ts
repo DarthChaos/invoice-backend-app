@@ -5,6 +5,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import DatabaseConfiguration from './config/DatabaseConfiguration';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FactoryModule } from './factory/factory.module';
+import { Cashier } from './cashier/cashier.entity';
+import { Customer } from './customer/customer.entity';
+import { CashierModule } from './cashier/cashier.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -24,10 +29,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get('postgres.role'),
         password: configService.get('postgres.password'),
         database: configService.get('postgres.db'),
-        entities: [],
+        entities: [Cashier, Customer],
         synchronize: true,
       }),
     }),
+    FactoryModule,
+    CashierModule,
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
