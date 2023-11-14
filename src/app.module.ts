@@ -10,6 +10,8 @@ import { Cashier } from './cashier/cashier.entity';
 import { Customer } from './customer/customer.entity';
 import { CashierModule } from './cashier/cashier.module';
 import { CustomerModule } from './customer/customer.module';
+import { ItemModule } from './item/item.module';
+import { InvoiceItem } from './item/item.entity';
 
 @Module({
   imports: [
@@ -29,13 +31,14 @@ import { CustomerModule } from './customer/customer.module';
         username: configService.get('postgres.role'),
         password: configService.get('postgres.password'),
         database: configService.get('postgres.db'),
-        entities: [Cashier, Customer],
+        entities: [Cashier, Customer, InvoiceItem],
         synchronize: true,
       }),
     }),
     FactoryModule,
     CashierModule,
     CustomerModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
