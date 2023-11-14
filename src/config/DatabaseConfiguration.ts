@@ -1,6 +1,8 @@
 import { registerAs } from '@nestjs/config';
+import { Observer, Subject } from 'rxjs';
 
 export default class DatabaseConfiguration {
+  private subject: Subject<any> = new Subject();
   private postgres: () => {
     port: string | number;
     host: string;
@@ -10,7 +12,7 @@ export default class DatabaseConfiguration {
   };
 
   getPostgresVars() {
-    if (!this.postgres)
+    if (!this.postgres) {
       this.postgres = registerAs('postgres', () => ({
         port: process.env.POSTGRES_PORT || 5432,
         host: process.env.POSTGRES_HOST || 'localhost',
@@ -19,6 +21,15 @@ export default class DatabaseConfiguration {
         db: process.env.POSTGRES_DATABASE,
       }));
 
+      this.subject.next(this.postgres().port);
+    } else {
+      this.subject.complete();
+    }
+
     return this.postgres;
+  }
+
+  subscribe(observer: Observer<any>): void {
+    this.subject.subscribe(observer);
   }
 }

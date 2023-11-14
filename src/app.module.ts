@@ -13,12 +13,20 @@ import { CustomerModule } from './customer/customer.module';
 import { ItemModule } from './item/item.module';
 import { InvoiceItem } from './item/item.entity';
 
+const dbConn = new DatabaseConfiguration();
+
+dbConn.subscribe({
+  next: (newState) => console.log('DB Port:', newState),
+  error: (error) => console.error('DB error:', error),
+  complete: () => console.log('Connection already complete'),
+});
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      load: [new DatabaseConfiguration().getPostgresVars()],
+      load: [dbConn.getPostgresVars()],
       envFilePath: '.dev.env',
     }),
     TypeOrmModule.forRootAsync({
